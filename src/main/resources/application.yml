@@ -1,0 +1,17 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+my-app:
+  welcome-message: "Hello, local"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+my-app:
+  welcome-message: "Hello, dev"
