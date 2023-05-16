@@ -7,3 +7,6 @@ spring:
       database: chat_app
       username: root
       password: root
+
+
+test
