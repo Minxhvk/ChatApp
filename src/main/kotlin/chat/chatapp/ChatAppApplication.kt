@@ -1,12 +1,14 @@
 package chat.chatapp
 
 import mu.KotlinLogging
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.runApplication
 
 private val logger = KotlinLogging.logger {}
 
-@SpringBootApplication
+@SpringBootApplication(exclude = [DataSourceAutoConfiguration::class])
 class ChatAppApplication
 
 fun main(args: Array<String>) {

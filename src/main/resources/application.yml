@@ -1,17 +1,9 @@
 spring:
-  config:
-    activate:
-      on-profile: local
-
-my-app:
-  welcome-message: "Hello, local"
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: dev
-
-my-app:
-  welcome-message: "Hello, dev"
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      authentication-database: admin
+      database: chat_app
+      username: root
+      password: root
