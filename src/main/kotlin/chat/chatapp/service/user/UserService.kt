@@ -13,7 +13,13 @@ class UserService(
 
     @Transactional
     fun saveUser(request: UserCreateRequest) {
-        val newUser = User(null, request.name, request.password, request.email, request.mobile)
+        val newUser = User(
+            name = request.name,
+            email = request.email,
+            password = request.password,
+            mobile = request.mobile
+        )
+
         userRepository.save(newUser)
     }
 }
