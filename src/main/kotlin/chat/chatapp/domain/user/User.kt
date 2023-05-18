@@ -1,39 +1,35 @@
 package chat.chatapp.domain.user
 
-import com.querydsl.core.annotations.QueryEntity
-import jakarta.persistence.Entity
-import org.springframework.data.annotation.Id
+import chat.chatapp.domain.PrimaryKeyEntity
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
-import java.time.LocalDateTime
 import javax.validation.constraints.Email
-import javax.validation.constraints.Size
 
 
 @Document(collection = "users")
 class User(
+    name: String,
+    email: String,
+    password: String,
+    mobile: String,
+): PrimaryKeyEntity() {
 
-    @Id
-    @Field("_id")
-    var id: String? = null,
-
-    val name: String,
+    @Field("name")
+    var name: String = name
+        private set
 
     @Email
-    val email: String,
+    var email: String = email
+        private set
 
     @Field(name = "password")
-    val password: String,
+    var password: String = password
+        private set
 
     @Field(name = "mobile")
-    val mobile: String,
+    var mobile: String = mobile
+        private set
 
-    @Field(name = "updated_at")
-    val updatedAt: LocalDateTime? = null,
-
-    @Field(name = "created_at")
-    val createdAt: LocalDateTime = LocalDateTime.now()
-) {
     init {
         require(name.length < 40) {
             throw IllegalArgumentException("이름은 40자 이내로 입력해야 합니다.")
@@ -67,7 +63,6 @@ class User(
                 email = email,
                 mobile = mobile,
                 password = password,
-                id = null,
             )
         }
     }
