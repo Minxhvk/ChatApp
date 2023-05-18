@@ -1,4 +1,4 @@
-package chat.chatapp.controller
+package chat.chatapp.controller.user
 
 import chat.chatapp.dto.request.user.UserCreateRequest
 import chat.chatapp.service.user.UserService
