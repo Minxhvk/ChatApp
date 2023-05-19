@@ -7,28 +7,20 @@ import javax.validation.constraints.Email
 
 
 @Document(collection = "member")
-class Member(
-    name: String,
-    email: String,
-    password: String,
-    mobile: String,
-): PrimaryKeyEntity() {
-
+class Member constructor(
     @Field("name")
-    var name: String = name
-        private set
+    var name: String,
 
     @Email
-    var email: String = email
-        private set
-
-    @Field(name = "password")
-    var password: String = password
-        private set
+    var email: String,
 
     @Field(name = "mobile")
-    var mobile: String = mobile
-        private set
+    var mobile: String,
+
+    @Field(name = "password")
+    var password: String,
+
+): PrimaryKeyEntity() {
 
     init {
         require(name.length < 40) {

@@ -1,26 +1,24 @@
 package chat.chatapp.domain.chat
 
 import chat.chatapp.domain.PrimaryKeyEntity
+import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
 
 @Document("chat")
 class Chat(
-    chatRoomId: String,
-    msg: String,
-    senderId: String,
-): PrimaryKeyEntity() {
-
-    @Field("chat_room_id")
-    var chatRoomId = chatRoomId
-        private set
 
     @Field("msg")
-    var msg = msg
-        private set
+    var msg: String,
 
+    @DBRef
+    @Field("chat_room_id")
+    var chatRoomId: String,
+
+    @DBRef
     @Field("sender_id")
-    var senderId = senderId
-        private set
+    var senderId: String,
+
+): PrimaryKeyEntity() {
 
 }

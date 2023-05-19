@@ -8,11 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Field
 
 @Document("chat_room")
 class ChatRoom(
-    members: MutableList<Member>
-): PrimaryKeyEntity() {
-
     @DBRef
     @Field("members")
-    var members = members
-        private set
+    var members: MutableList<Member>
+): PrimaryKeyEntity() {
+
 }
