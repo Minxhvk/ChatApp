@@ -1,4 +1,4 @@
-package chat.chatapp.domain.user
+package chat.chatapp.domain.member
 
 import chat.chatapp.domain.PrimaryKeyEntity
 import org.springframework.data.mongodb.core.mapping.Document
@@ -6,8 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Field
 import javax.validation.constraints.Email
 
 
-@Document(collection = "users")
-class User(
+@Document(collection = "member")
+class Member(
     name: String,
     email: String,
     password: String,
@@ -57,8 +57,8 @@ class User(
             email: String = "minxhvk@gmail.com",
             mobile: String = "010-0000-0000",
             password: String = "asd1234!",
-        ): User {
-            return User(
+        ): Member {
+            return Member(
                 name = name,
                 email = email,
                 mobile = mobile,

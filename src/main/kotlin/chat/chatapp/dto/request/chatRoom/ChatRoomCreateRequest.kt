@@ -1,7 +1,7 @@
 package chat.chatapp.dto.request.chatRoom
 
-import chat.chatapp.domain.user.User
+import chat.chatapp.domain.member.Member
 
 data class ChatRoomCreateRequest(
-    val users: MutableList<User>
+    val users: MutableList<Member>
 )

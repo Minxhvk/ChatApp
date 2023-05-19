@@ -1,25 +1,26 @@
 package chat.chatapp.service.user
 
-import chat.chatapp.domain.user.User
-import chat.chatapp.domain.user.UserRepository
-import chat.chatapp.dto.request.user.UserCreateRequest
+import chat.chatapp.domain.member.Member
+import chat.chatapp.domain.member.MemberRepository
+import chat.chatapp.dto.request.member.MemberCreateRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
-class UserService(
-    private val userRepository: UserRepository,
+class MemberService(
+    private val memberRepository: MemberRepository,
 ) {
 
     @Transactional
-    fun saveUser(request: UserCreateRequest) {
-        val newUser = User(
+    fun saveUser(request: MemberCreateRequest) {
+        val newMember = Member(
             name = request.name,
             email = request.email,
             password = request.password,
             mobile = request.mobile
         )
 
-        userRepository.save(newUser)
+        memberRepository.save(newMember)
     }
 }

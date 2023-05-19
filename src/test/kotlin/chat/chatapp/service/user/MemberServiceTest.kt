@@ -1,7 +1,7 @@
 package chat.chatapp.service.user
 
-import chat.chatapp.domain.user.UserRepository
-import chat.chatapp.dto.request.user.UserCreateRequest
+import chat.chatapp.domain.member.MemberRepository
+import chat.chatapp.dto.request.member.MemberCreateRequest
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -10,27 +10,27 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class UserServiceTest @Autowired constructor(
-    private val userRepository: UserRepository,
-    private val userService: UserService,
+class MemberServiceTest @Autowired constructor(
+    private val memberRepository: MemberRepository,
+    private val memberService: MemberService,
 ) {
     @AfterEach
     fun clean() {
-        userRepository.deleteAll()
+        memberRepository.deleteAll()
     }
 
     @Test
     fun saveUserTest() {
-        val request = UserCreateRequest(
+        val request = MemberCreateRequest(
             "김민혁",
             "minxhvk@gmail.com",
             "asd1234!",
             "010-0000-0000"
         )
 
-        userService.saveUser(request)
+        memberService.saveUser(request)
 
-        val results = userRepository.findAll()
+        val results = memberRepository.findAll()
 
         assertThat(results).hasSize(1)
         assertThat(results[0].id is String).isEqualTo(true)
@@ -42,7 +42,7 @@ class UserServiceTest @Autowired constructor(
     @Test
     fun saveUserFailTest() {
 
-        val request = UserCreateRequest(
+        val request = MemberCreateRequest(
             "김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁",
             "minxhvk@gmail.com",
             "asd1234!",
@@ -50,7 +50,7 @@ class UserServiceTest @Autowired constructor(
         )
 
         val exception = assertThrows<IllegalArgumentException> {
-            userService.saveUser(request)
+            memberService.saveUser(request)
         }
 
         assertThat(exception.message).isEqualTo("이름은 40자 이내로 입력해야 합니다.")

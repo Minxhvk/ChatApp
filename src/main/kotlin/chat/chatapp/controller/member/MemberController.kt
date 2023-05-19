@@ -1,7 +1,7 @@
-package chat.chatapp.controller.user
+package chat.chatapp.controller.member
 
-import chat.chatapp.dto.request.user.UserCreateRequest
-import chat.chatapp.service.user.UserService
+import chat.chatapp.dto.request.member.MemberCreateRequest
+import chat.chatapp.service.user.MemberService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/user")
-class UserController(
-    private val userService: UserService
+class MemberController(
+    private val memberService: MemberService
 ) {
 
     @PostMapping("/")
-    fun saveUser(@RequestBody request: UserCreateRequest) {
-        userService.saveUser(request)
+    fun saveMember(@RequestBody request: MemberCreateRequest) {
+        memberService.saveUser(request)
     }
 }

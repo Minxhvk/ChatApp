@@ -1,7 +1,7 @@
-package chat.chatapp.domain.user
+package chat.chatapp.domain.member
 
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface UserRepository: MongoRepository<User, String>
+interface MemberRepository: MongoRepository<Member, String>
