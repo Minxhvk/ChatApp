@@ -1,6 +1,6 @@
-package chat.chatapp.dto.request.member
+package chat.chatapp.dto.request.sign
 
-data class MemberCreateRequest(
+data class SignUpRequest(
     val name: String,
     val email: String,
     val password: String,

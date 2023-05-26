@@ -1,7 +1,7 @@
-package chat.chatapp.service.user
+package chat.chatapp.service.member
 
 import chat.chatapp.domain.member.MemberRepository
-import chat.chatapp.dto.request.member.MemberCreateRequest
+import chat.chatapp.dto.request.sign.SignUpRequest
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -21,7 +21,7 @@ class MemberServiceTest @Autowired constructor(
 
     @Test
     fun saveUserTest() {
-        val request = MemberCreateRequest(
+        val request = SignUpRequest(
             "김민혁",
             "minxhvk@gmail.com",
             "asd1234!",
@@ -42,7 +42,7 @@ class MemberServiceTest @Autowired constructor(
     @Test
     fun saveUserFailTest() {
 
-        val request = MemberCreateRequest(
+        val request = SignUpRequest(
             "김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁",
             "minxhvk@gmail.com",
             "asd1234!",

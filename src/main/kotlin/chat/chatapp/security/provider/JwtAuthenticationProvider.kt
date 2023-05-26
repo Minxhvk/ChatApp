@@ -1,9 +1,7 @@
-package chat.chatapp.service
+package chat.chatapp.security.provider
 
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.JwtParser
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
+import chat.chatapp.security.exception.JwtInvalidException
+import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
 import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Value
@@ -14,14 +12,14 @@ import java.security.Key
 import java.util.*
 
 @Service
-class JwtTokenService {
+class JwtAuthenticationProvider {
 
     @Value("\${spring.jwt.secret}")
     private lateinit var SECRET_KEY: String
     private lateinit var signingKey: Key
     private lateinit var jwtParser: JwtParser
     
-    private val KEY_USER_ID: String = "user_id"
+    private val KEY_USERNAME: String = "username"
     private val tokenValidTime = 30 * 60 * 1000L
 
     @PostConstruct
@@ -36,7 +34,7 @@ class JwtTokenService {
     }
 
     // 토큰에서 회원 정보 추출
-    fun getUserId(token: String): String {
+    fun getUserName(token: String): String {
         return Jwts.parserBuilder()
             .setSigningKey(signingKey).build()
             .parseClaimsJws(token).body.subject
@@ -44,8 +42,9 @@ class JwtTokenService {
 
 
     fun generateToken(userDetails: UserDetails): String {
+
         val claims: Claims = Jwts.claims() // JWT payload 에 저장되는 정보단위
-        claims[KEY_USER_ID] = userDetails.username
+        claims[KEY_USERNAME] = userDetails.username
 
         return createToken(claims)
     }
@@ -60,4 +59,22 @@ class JwtTokenService {
             .setExpiration(Date(now.time + tokenValidTime)) // set Expire Time
             .signWith(signingKey, SignatureAlgorithm.HS256).compact() // 사용할 암호화 알고리즘과 signature 에 들어갈 secret값 세팅
     }
+
+//    fun validateJwtToken(jwt: String): Boolean {
+//
+//        try {
+//            jwtParser.parseClaimsJwt(jwt)
+//            return true
+//        } catch (signatureException: java.security.SignatureException) {
+//            throw JwtInvalidException("Signature key is different")
+//        } catch (expiredJwtException: ExpiredJwtException) {
+//            throw JwtInvalidException("ExpiredJwtException")
+//        } catch (malformedJwtException: MalformedJwtException) {
+//            throw JwtInvalidException("Malformed Token")
+//        } catch (illegalArgumentException: IllegalArgumentException) {
+//            throw JwtInvalidException("Illegal Argument Like Null")
+//        }
+//
+//        return false
+//    }
 }
