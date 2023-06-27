@@ -14,7 +14,7 @@ class ChatRoomService(
     @Transactional
     fun createChatRoom(request: ChatRoomCreateRequest) {
 
-        val newChatRoom = ChatRoom(request.users)
+        val newChatRoom = ChatRoom(members=request.users)
         chatRoomRepository.save(newChatRoom)
     }
 }

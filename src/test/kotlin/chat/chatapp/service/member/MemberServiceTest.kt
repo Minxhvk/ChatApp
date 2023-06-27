@@ -1,7 +1,7 @@
 package chat.chatapp.service.member
 
 import chat.chatapp.domain.member.MemberRepository
-import chat.chatapp.dto.request.sign.SignUpRequest
+import chat.chatapp.dto.request.sign.UserSignUpRequest
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -10,39 +10,49 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class MemberServiceTest @Autowired constructor(
+internal class MemberServiceTest @Autowired constructor(
     private val memberRepository: MemberRepository,
     private val memberService: MemberService,
 ) {
     @AfterEach
-    fun clean() {
+    internal fun clean() {
         memberRepository.deleteAll()
     }
 
     @Test
-    fun saveUserTest() {
-        val request = SignUpRequest(
+    internal fun saveUserTest() {
+        val request = UserSignUpRequest(
             "김민혁",
             "minxhvk@gmail.com",
             "asd1234!",
             "010-0000-0000"
         )
 
-        memberService.saveUser(request)
+        memberService.createUser(request)
 
         val results = memberRepository.findAll()
 
         assertThat(results).hasSize(1)
-        assertThat(results[0].id is String).isEqualTo(true)
+        assertThat(results[0].id is Long).isEqualTo(true)
         assertThat(results[0].name).isEqualTo("김민혁")
         assertThat(results[0].email).isEqualTo("minxhvk@gmail.com")
         assertThat(results[0].mobile).isEqualTo("010-0000-0000")
     }
 
     @Test
-    fun saveUserFailTest() {
+    internal fun saveuserDuplicateEmailTest() {
+        val request = UserSignUpRequest(
+            "김민혁",
+            "minxhvk@gmail.com",
+            "asd1234!",
+            "010-0000-0000"
+        )
+    }
 
-        val request = SignUpRequest(
+    @Test
+    internal fun saveUserFailTest() {
+
+        val request = UserSignUpRequest(
             "김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁김민혁",
             "minxhvk@gmail.com",
             "asd1234!",
@@ -50,7 +60,7 @@ class MemberServiceTest @Autowired constructor(
         )
 
         val exception = assertThrows<IllegalArgumentException> {
-            memberService.saveUser(request)
+            memberService.createUser(request)
         }
 
         assertThat(exception.message).isEqualTo("이름은 40자 이내로 입력해야 합니다.")

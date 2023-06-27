@@ -1,7 +1,7 @@
 package chat.chatapp.filter
 
-import chat.chatapp.security.UserDetailService
 import chat.chatapp.security.provider.JwtAuthenticationProvider
+import chat.chatapp.service.member.UserDetailService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

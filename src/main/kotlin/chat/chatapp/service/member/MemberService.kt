@@ -3,10 +3,10 @@ package chat.chatapp.service.member
 import chat.chatapp.domain.member.Member
 import chat.chatapp.domain.member.MemberRepository
 import chat.chatapp.dto.member.MemberDto
-import chat.chatapp.dto.request.sign.LoginRequest
-import chat.chatapp.dto.request.sign.SignUpRequest
-import chat.chatapp.exception.InvalidEmailException
-import chat.chatapp.exception.MemberNotFoundException
+import chat.chatapp.dto.request.sign.UserLoginRequest
+import chat.chatapp.dto.request.sign.UserSignUpRequest
+import chat.chatapp.exception.BizException
+import chat.chatapp.exception.BizResponseCode
 import chat.chatapp.security.provider.JwtAuthenticationProvider
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
@@ -22,10 +22,10 @@ class MemberService(
 ) {
 
     @Transactional
-    fun saveUser(request: SignUpRequest): MemberDto {
+    fun createUser(request: UserSignUpRequest): MemberDto {
 
-        if(!isValidEmail(request.email)) {
-            throw InvalidEmailException("Duplicated Email")
+        if(isExistsEmail(request.email)) {
+            throw BizException(BizResponseCode.DUPLICATE_EMAIL)
         }
 
         val newMember = Member(
@@ -37,25 +37,32 @@ class MemberService(
 
         memberRepository.save(newMember)
 
-        val token = jwtAuthenticationProvider.generateToken(userOf(newMember))
+        val token = jwtAuthenticationProvider.generateToken(newMember)
 
-        return MemberDto.from(newMember, token)
+        return MemberDto.from(newMember.id, newMember.email, token)
     }
 
     @Transactional
-    fun login(request: LoginRequest): String {
-        val findMember = memberRepository.findByEmail(request.email) ?: throw MemberNotFoundException("User Does Not Exists")
+    fun login(request: UserLoginRequest): MemberDto {
 
-        return "test"
+        val findMember = memberRepository.findUserByEmail(request.email)
+            ?: throw BizException(BizResponseCode.USER_NOT_FOUND)
+
+        if (!passwordEncoder.matches(request.password, findMember.password)) {
+            throw BizException(BizResponseCode.INVALID_PASSWORD)
+        }
+
+        val token = jwtAuthenticationProvider.generateToken(findMember)
+
+        return MemberDto.from(findMember.id, findMember.email, token)
     }
 
 
-    fun isValidEmail(email: String): Boolean {
+    fun isExistsEmail(email: String): Boolean {
 
-        // 존재할 경우
-        memberRepository.findByEmail(email)?.let { return false }
-
-        return true
+        memberRepository.findUserByEmail(email)
+            ?.let { return true }
+            ?: return false
     }
 
     private fun userOf(member: Member): UserDetails {

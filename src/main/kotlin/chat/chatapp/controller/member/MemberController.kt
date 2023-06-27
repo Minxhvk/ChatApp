@@ -1,8 +1,8 @@
 package chat.chatapp.controller.member
 
 import chat.chatapp.dto.member.MemberDto
-import chat.chatapp.dto.request.sign.LoginRequest
-import chat.chatapp.dto.request.sign.SignUpRequest
+import chat.chatapp.dto.request.sign.UserLoginRequest
+import chat.chatapp.dto.request.sign.UserSignUpRequest
 import chat.chatapp.service.member.MemberService
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
@@ -17,8 +17,8 @@ class MemberController(
 
     @PostMapping("/signup")
     @ResponseStatus(code = HttpStatus.CREATED)
-    fun signUp(@RequestBody request: SignUpRequest, response: HttpServletResponse): MemberDto {
-        val memberDto = memberService.saveUser(request)
+    fun signUp(@RequestBody request: UserSignUpRequest, response: HttpServletResponse): MemberDto {
+        val memberDto = memberService.createUser(request)
 
         response.addCookie(Cookie("Authorization", memberDto.token))
 
@@ -26,7 +26,7 @@ class MemberController(
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest, response: HttpServletResponse): String {
+    fun login(@RequestBody request: UserLoginRequest, response: HttpServletResponse): String {
         val memberDto = memberService.login(request)
 
         return "memberDto"

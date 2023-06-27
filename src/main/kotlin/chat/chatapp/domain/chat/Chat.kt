@@ -1,6 +1,7 @@
 package chat.chatapp.domain.chat
 
-import chat.chatapp.domain.PrimaryKeyEntity
+import chat.chatapp.domain.BaseTime
+import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
@@ -8,17 +9,18 @@ import org.springframework.data.mongodb.core.mapping.Field
 @Document("chat")
 class Chat(
 
-    @Field("msg")
-    var msg: String,
+    @Id
+    val id: Long? = null,
 
-    @DBRef
+    val message: String,
+
     @Field("chat_room_id")
-    var chatRoomId: String,
+    val chatRoomId: String,
 
     @DBRef
     @Field("sender_id")
-    var senderId: String,
+    val senderId: String,
 
-): PrimaryKeyEntity() {
+): BaseTime() {
 
 }

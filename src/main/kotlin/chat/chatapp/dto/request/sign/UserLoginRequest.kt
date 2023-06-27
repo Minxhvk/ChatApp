@@ -1,8 +1,6 @@
 package chat.chatapp.dto.request.sign
 
-data class SignUpRequest(
-    val name: String,
+data class UserLoginRequest(
     val email: String,
     val password: String,
-    val mobile: String,
 )
