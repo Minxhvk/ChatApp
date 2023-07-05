@@ -1,7 +1,7 @@
 package chat.chatapp.service.member
 
 import chat.chatapp.domain.member.MemberRepository
-import chat.chatapp.dto.request.sign.UserSignUpRequest
+import chat.chatapp.dto.member.request.UserSignUpRequest
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -33,7 +33,7 @@ internal class MemberServiceTest @Autowired constructor(
         val results = memberRepository.findAll()
 
         assertThat(results).hasSize(1)
-        assertThat(results[0].id is Long).isEqualTo(true)
+        assertThat(results[0].id is String).isEqualTo(true)
         assertThat(results[0].name).isEqualTo("김민혁")
         assertThat(results[0].email).isEqualTo("minxhvk@gmail.com")
         assertThat(results[0].mobile).isEqualTo("010-0000-0000")

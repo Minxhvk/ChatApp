@@ -1,4 +1,4 @@
-package chat.chatapp.dto.request.chatRoom
+package chat.chatapp.dto.chatRoom.request
 
 import chat.chatapp.domain.member.Member
 

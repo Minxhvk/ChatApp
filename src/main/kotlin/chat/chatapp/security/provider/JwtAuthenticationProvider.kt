@@ -1,15 +1,14 @@
 package chat.chatapp.security.provider
 
-import chat.chatapp.security.exception.JwtInvalidException
-import chat.chatapp.service.member.UserDetailService
+import chat.chatapp.security.service.UserDetailService
 import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
 import jakarta.annotation.PostConstruct
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
+import java.nio.charset.StandardCharsets
 import java.security.Key
 import java.util.*
 
@@ -29,8 +28,8 @@ class JwtAuthenticationProvider(
     @PostConstruct
     fun init() {
         SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.toByteArray())
-//        signingKey = Keys.hmacShaKeyFor(SECRET_KEY.toByteArray(StandardCharsets.UTF_8))
-//        jwtParser = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build()
+        signingKey = Keys.hmacShaKeyFor(SECRET_KEY.toByteArray(StandardCharsets.UTF_8))
+        jwtParser = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build()
     }
 
     fun isValidToken(token: String): Boolean {
@@ -58,7 +57,7 @@ class JwtAuthenticationProvider(
         val now = Date()
 
         return Jwts.builder()
-            .setHeaderParam("typ", "JWT")
+            .setHeaderParam("type", "JWT")
             .setClaims(claims) // 정보 저장
             .setIssuedAt(now) // 토큰 발행 시간 정보
             .setExpiration(Date(now.time + tokenValidTime)) // set Expire Time

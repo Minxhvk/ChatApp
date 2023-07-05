@@ -1,4 +1,4 @@
-package chat.chatapp.service.member
+package chat.chatapp.security.service
 
 import chat.chatapp.domain.member.MemberRepository
 import org.springframework.security.core.userdetails.UserDetails
@@ -11,7 +11,7 @@ class UserDetailService(
     val userRepository: MemberRepository
 ) : UserDetailsService {
     override fun loadUserByUsername(email: String): UserDetails {
-        return userRepository.findUser(email)
+        return userRepository.findByEmail(email)
             ?: throw UsernameNotFoundException("유저를 찾을 수 없습니다. Email : $email")
     }
 }

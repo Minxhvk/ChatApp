@@ -1,80 +1,54 @@
 package chat.chatapp.config
 
-import chat.chatapp.security.handler.AuthFailuereHandler
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
+import chat.chatapp.filter.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
-import org.springframework.security.core.AuthenticationException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.AuthenticationFailureHandler
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 
 @Configuration
 @EnableWebSecurity
-class WebAuthenticationConfiguration {
+class MultiHttpSecurityConfig(
+    private val jwtFilter: JwtAuthenticationFilter
+) {
 
-    @Bean
-    fun webSecurityCustomizer(): WebSecurityCustomizer {
-        return WebSecurityCustomizer { web: WebSecurity ->
-            web.ignoring().requestMatchers("/images/**", "/js/**", "/webjars/**")
-        }
-    }
+    val AUTH_WHITELIST = arrayOf(
+        /* 회원가입 */
+        "/api/v1/user/signup",
+        "/api/v1/user/login"
+    )
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
 
         http
             .csrf().disable()
+
+        return http
             .authorizeHttpRequests { authorize ->
                 authorize
-                    .requestMatchers("/api/v1/user/signup").permitAll()
+                    .requestMatchers(*AUTH_WHITELIST).permitAll()
+                    .requestMatchers(HttpMethod.GET, "/ideal-types").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/interests").permitAll()
                     .anyRequest().authenticated()
-//                    .requestMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN")
-//                    .requestMatchers("/admin/**").hasRole("ADMIN")
-//                    .anyRequest()
+                    .and()
+                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
             }
-            .formLogin { formLogin ->
-                formLogin
-                    .loginPage("/login")
-                    .usernameParameter("email")
-                    .passwordParameter("password")
-                    .failureHandler(AuthFailuereHandler())
-                    .permitAll()
-            }
-            .exceptionHandling { exceptionHandling ->
-                exceptionHandling.authenticationEntryPoint(authenticationEntryPoint())
-            }
+            .httpBasic(Customizer.withDefaults())
+            .build()
 
-        return http.build()
+//            .requestMatchers("/admin/**").hasRole("ADMIN") // '/admin/*' 요청은 ADMIN 권한을 가진 사용자만 접근 가능
     }
-
-//    @Bean
-//    fun authenticationFailureHandler(): AuthenticationFailureHandler {
-//        return AuthenticationFailureHandler { request, response, exception ->
-//            response.writer.println(exception.message)
-//            response.status = HttpServletResponse.SC_UNAUTHORIZED
-//        }
-//    }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
-    }
-
-    @Bean
-    fun authenticationEntryPoint(): AuthenticationEntryPoint {
-        return AuthenticationEntryPoint { _, response, authException ->
-            response.status = HttpServletResponse.SC_UNAUTHORIZED
-            response.writer.println(authException?.message)
-        }
     }
 }

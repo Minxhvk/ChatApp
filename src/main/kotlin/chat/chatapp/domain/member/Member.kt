@@ -13,7 +13,7 @@ import javax.validation.constraints.Email
 class Member constructor(
 
     @Id
-    val id: Long? = null,
+    val id: String? = null,
 
     @Field("name")
     var name: String,
@@ -79,6 +79,8 @@ class Member constructor(
     override fun isEnabled(): Boolean {
         return true
     }
+
+    fun withId(id: String?): Member = Member(id, name, email, mobile, password)
 
 
     companion object {

@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface MemberRepository: MongoRepository<Member, String>, JpaSpecificationExecutor<Member> {
+interface MemberRepository: MongoRepository<Member, String> {
 
-    fun findUser(email: String?): UserDetails?
+    fun findByEmail(email: String?): UserDetails?
 
     fun findUserByEmail(email: String?): Member?
 }

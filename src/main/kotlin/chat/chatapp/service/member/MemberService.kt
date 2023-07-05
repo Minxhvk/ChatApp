@@ -2,9 +2,8 @@ package chat.chatapp.service.member
 
 import chat.chatapp.domain.member.Member
 import chat.chatapp.domain.member.MemberRepository
-import chat.chatapp.dto.member.MemberDto
-import chat.chatapp.dto.request.sign.UserLoginRequest
-import chat.chatapp.dto.request.sign.UserSignUpRequest
+import chat.chatapp.dto.member.request.UserLoginRequest
+import chat.chatapp.dto.member.request.UserSignUpRequest
 import chat.chatapp.exception.BizException
 import chat.chatapp.exception.BizResponseCode
 import chat.chatapp.security.provider.JwtAuthenticationProvider
@@ -22,11 +21,9 @@ class MemberService(
 ) {
 
     @Transactional
-    fun createUser(request: UserSignUpRequest): MemberDto {
+    fun createUser(request: UserSignUpRequest): String {
 
-        if(isExistsEmail(request.email)) {
-            throw BizException(BizResponseCode.DUPLICATE_EMAIL)
-        }
+        memberRepository.findUserByEmail(request.email)?.let { throw BizException(BizResponseCode.DUPLICATE_EMAIL) }
 
         val newMember = Member(
             name = request.name,
@@ -37,13 +34,11 @@ class MemberService(
 
         memberRepository.save(newMember)
 
-        val token = jwtAuthenticationProvider.generateToken(newMember)
-
-        return MemberDto.from(newMember.id, newMember.email, token)
+        return jwtAuthenticationProvider.generateToken(newMember)
     }
 
     @Transactional
-    fun login(request: UserLoginRequest): MemberDto {
+    fun login(request: UserLoginRequest): String {
 
         val findMember = memberRepository.findUserByEmail(request.email)
             ?: throw BizException(BizResponseCode.USER_NOT_FOUND)
@@ -52,9 +47,7 @@ class MemberService(
             throw BizException(BizResponseCode.INVALID_PASSWORD)
         }
 
-        val token = jwtAuthenticationProvider.generateToken(findMember)
-
-        return MemberDto.from(findMember.id, findMember.email, token)
+        return jwtAuthenticationProvider.generateToken(findMember)
     }
 
 

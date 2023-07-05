@@ -1,4 +1,4 @@
-package chat.chatapp.dto.request.sign
+package chat.chatapp.dto.member.request
 
 data class UserSignUpRequest(
     val name: String,

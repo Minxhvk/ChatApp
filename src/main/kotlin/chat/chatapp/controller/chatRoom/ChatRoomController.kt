@@ -1,6 +1,6 @@
 package chat.chatapp.controller.chatRoom
 
-import chat.chatapp.dto.request.chatRoom.ChatRoomCreateRequest
+import chat.chatapp.dto.chatRoom.request.ChatRoomCreateRequest
 import chat.chatapp.service.chatRoom.ChatRoomService
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
